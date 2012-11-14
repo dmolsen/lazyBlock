@@ -2,6 +2,10 @@
 
 lazyBlock is a proof-of-concept to show how content can be conditionally loaded in responsive designs without relying on AJAX to fetch that content. Content is included in the original mark-up but is commented out. Based on user action or media queries, the content can then be uncommented and injected into the DOM by lazyBlock.
 
+## How is this Different from display: none?
+
+Any mark-up contained within an element that has been set to `display: none` will still be parsed by the browser. For example, if your mark-up contains images the browser will download them. For performance reasons you may not want this to happen. lazyBlock helps developers avoid those extra downloads.
+
 ## Demo
 
 There is a [small demo](http://lazyblock.dmolsen.com) that uses code from Brad Frost's "[Anatomy of a Mobile First RWD](http://bradfrostweb.com/blog/mobile/anatomy-of-a-mobile-first-responsive-web-design/)" example. You should be able to preview the following functionality:
