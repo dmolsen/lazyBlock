@@ -10,47 +10,72 @@
  *
  */
 
-// string trim taken from: http://stackoverflow.com/questions/498970/how-do-i-trim-a-string-in-javascript
-String.prototype.trim = String.prototype.trim || function trim() { return this.replace(/^\s\s*/, '').replace(/\s\s*$/, ''); };
-
-// lazyBlock functions can be accessed via the vars lB or lazyBlock
-var lB = lazyBlock = {
+var lB = {
+	
+	el: '',
+	t:  '',
 	
 	getById: function(id) {
-		return document.getElementById(id);
+		this.el = document.getElementById(id);
+		return this;
 	},
 	
-	bind: function (el, event, fct) {
-		this.getById(el).addEventListener(event, fct, false);
-	},
+	dispatchFakeEvent: function (eventName) {
+		this.el[eventName]++;
+	},              
 	
-	unbind: function (el, event, fct) {
-		this.getById(el).removeEventListener(event, fct, false);
-	},
-	
-	trigger: function (el, event) {
-		var ev = document.createEvent("Event");
-		ev.initEvent(event, true, true);
-		el.dispatchEvent(ev);
-	},
-	
-	toggle: function (el) {
-		this.trigger(el,"onLBStart");
-		var t = el.id.substr(0,(el.id.length-5));
-		var e = this.getById(t+"-panel");
-		if (e.style.display == "none") {
-			if (e.getAttribute("data-moved") == undefined) {
-				var s = e.innerHTML.trim();
-				e.innerHTML = s.substr(4,(s.length-7));
-				e.setAttribute("data-moved","true");
+	bind: function (eventName, fct) {
+		if (this.el.addEventListener) {
+			this.el.addEventListener(eventName, fct, false);
+		} else if (this.el.attachEvent) {
+			if (!this.el[eventName]) {
+				this.el[eventName] = 0;
 			}
-			e.style.display = "block";
-			this.trigger(el,"onLBShow");
-		} else {
-			e.style.display = "none";
-			this.trigger(el,"onLBHide");
+			this.el.attachEvent("onpropertychange", function(event){
+				if (event.propertyName == eventName) {
+					fct(fct);
+				}
+			});
 		}
-		this.trigger(el,"onLBComplete");
+	},
+	
+	trigger: function (eventName) {
+		if (document.createEvent) {
+			var ev = document.createEvent("Event");
+			ev.initEvent(eventName, true, true);
+			this.el.dispatchEvent(ev);
+		} else if (document.createEventObject) {
+			this.dispatchFakeEvent(eventName);
+		}	
+	},
+	
+	swap: function (fireEvent) {
+		var s = document.getElementById(this.t+"-source");
+		var t = document.getElementById(this.t+"-target");
+		if (t.style.display == "none") {
+			if (t.getAttribute("data-moved") == undefined) {
+				t.innerHTML = s.innerHTML;
+				t.setAttribute("data-moved","true");
+			}
+			t.style.display = "block";
+			if (fireEvent) { this.trigger("onLBShow"); }
+		} else {
+			t.style.display = "none";
+			if (fireEvent) { this.trigger("onLBHide"); }
+		}
+	},
+	
+	toggle: function (others) {
+		this.trigger("onLBStart");
+		this.t = this.el.id.substr(0,(this.el.id.length-5));
+		this.swap(true);
+		if (typeof(others) === "object") {
+			for (var i = 0, k = others.length; i < k; i++) {
+				this.t = others[i];
+				this.swap(false);
+			}
+		}
+		this.trigger("onLBComplete");
 	}
 	
 };

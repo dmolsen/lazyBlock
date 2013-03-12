@@ -8,12 +8,12 @@
 			body {
 				font-family: sans-serif;
 			}
-			#related-shirts-panel ul {
+			#related-shirts-target ul {
 				padding: 0;
 				margin: 0;
 				border: 0;
 			}
-			#related-shirts-panel ul li {
+			#related-shirts-target ul li {
 				list-style: none;
 				float: left;
 				padding-right: 5px;
@@ -40,18 +40,17 @@
 					<h2>Related Shirts (<span id="related-shirts-status">show shirts</span>)</h2>
 				</a>
 			</header>
-			<div role="tabpanel" id="related-shirts-panel" style="display: none;">
-				<!--
-					<ul>
-					    <li><a href="#"><img src="images/related_1.jpg" alt="Product Name" /></a></li>
-					    <li><a href="#"><img src="images/related_2.jpg" alt="Product Name" /></a></li>
-					    <li><a href="#"><img src="images/related_3.jpg" alt="Product Name" /></a></li>
-					    <li><a href="#"><img src="images/related_4.jpg" alt="Product Name" /></a></li>
-					    <li><a href="#"><img src="images/related_5.jpg" alt="Product Name" /></a></li>
-					    <li><a href="#"><img src="images/related_6.jpg" alt="Product Name" /></a></li>
-					</ul>
-				-->
-			</div>
+			<div role="tabpanel" id="related-shirts-target" style="display: none;"></div>
+			<script id="related-shirts-source" type="text/html">
+				<ul>
+					<li><a href="#"><img src="images/related_1.jpg" alt="Product Name" border="0" /></a></li>
+					<li><a href="#"><img src="images/related_2.jpg" alt="Product Name" border="0" /></a></li>
+					<li><a href="#"><img src="images/related_3.jpg" alt="Product Name" border="0" /></a></li>
+					<li><a href="#"><img src="images/related_4.jpg" alt="Product Name" border="0" /></a></li>
+					<li><a href="#"><img src="images/related_5.jpg" alt="Product Name" border="0" /></a></li>
+					<li><a href="#"><img src="images/related_6.jpg" alt="Product Name" border="0" /></a></li>
+				</ul>
+			</script>
 		</section>
 		<!-- end of code stolen from Brad -->
 		
@@ -76,30 +75,45 @@
 		</div>
 		
 		<!-- in production I'd minify & inline these -->
-		<script src="scripts/matchmedia.js"></script>
 		<script src="scripts/lazyBlock.js"></script>
 		
 		<!-- examples of using lazyBlock -->
 		<script>
 		
 			// add an onclick handler to toggle the example
-			lB.getById("related-shirts-link").onclick = function() { lB.toggle(this) };
+			document.getElementById("related-shirts-link").onclick = function() { lB.getById("related-shirts-link").toggle(); };
 			
 			// run code at certain points in the running of the toggle
 			// supported events: onLBStart, onLBShow, onLBHide, onLBComplete
-			lB.bind("related-shirts-link","onLBShow",function() { lB.getById("related-shirts-status").innerHTML = "hide shirts"; } );
-			lB.bind("related-shirts-link","onLBHide",function() { lB.getById("related-shirts-status").innerHTML = "show shirts"; } );
+			lB.getById("related-shirts-link").bind("onLBShow",function() { document.getElementById("related-shirts-status").innerHTML = "hide shirts"; } );
+			lB.getById("related-shirts-link").bind("onLBHide",function() { document.getElementById("related-shirts-status").innerHTML = "show shirts"; } );
 			
 			// use match media to toggle content based on media queries
-			if (matchMedia('only screen and (min-width: 500px)').matches) {
-				lB.toggle(lB.getById("related-shirts-link"));
+			function getWindowWidth() {
+				var windowWidth = (window.innerWidth) ? window.innerWidth : document.documentElement.offsetWidth;
+				return windowWidth;
 			}
 			
-			// you can also use a listener to track on window resizing. you *must* use
-			// the previous matchmedia check *first*. 
-			matchMedia("screen and (min-width: 500px)").addListener(function(mql) {
-				lB.toggle(lB.getById("related-shirts-link"));
-			});
+			var showing  = false;
+			var minWidth = 500;
+			
+			// toggle content based on some arbitrary minimum-width on page load
+			if (getWindowWidth() >= minWidth) {
+				lB.getById("related-shirts-link").toggle();
+				showing = true;
+			}
+			
+			// you can also use a listener to track on window resizing. 
+			// you *must* use the previous window width check first 
+			window.onresize = function() {
+				if ((getWindowWidth() >= minWidth) && !showing) {
+					lB.getById("related-shirts-link").toggle();
+					showing = true;
+				} else if ((getWindowWidth() < minWidth) && showing) {
+					lB.getById("related-shirts-link").toggle();
+					showing = false;
+				}
+			};
 			
 		</script>
 	</body>
