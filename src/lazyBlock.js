@@ -1,8 +1,13 @@
 /*!
- * lazyBlock v1.0
+ * lazyBlock v2.0
  *
- * Copyright (c) 2012 Dave Olsen, http://dmolsen.com
+ * Copyright (c) 2012-13 Dave Olsen, http://dmolsen.com
  * Licensed under the MIT license
+ * 
+ * IE custom event handling based on:
+ * http://dean.edwards.name/weblog/2009/03/callbacks-vs-events/ &&
+ * http://stackoverflow.com/questions/5342917/custom-events-in-ie-without-using-libraries
+ *
  */
 
 // string trim taken from: http://stackoverflow.com/questions/498970/how-do-i-trim-a-string-in-javascript
