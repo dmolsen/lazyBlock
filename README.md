@@ -27,7 +27,7 @@ Setting up lazyBlock is pretty simple.
 
 ### The Mark-up
 
-The key to setting up your mark-up to work with lazyBlock is to make sure that the IDs for your clickable element and your content element share the same base and follow the convention `[shared-base]-link`, `[shared-base]-source`, and `[shared-base]-target` respectively. lazyBlock will then work auto-magically. Obviously, the content in your content element must also be commented out. In the demo you can see that the shared base is "related-shirts."
+The key to setting up your mark-up to work with lazyBlock is to make sure that the IDs for your clickable element, your content source element, and content target element share the same base and follow the convention `[shared-base]-link`, `[shared-base]-source`, and `[shared-base]-target` respectively. lazyBlock will then work auto-magically. In the demo you can see that the shared base is "related-shirts."
 
 The clickable element from the demo:
 
@@ -35,11 +35,11 @@ The clickable element from the demo:
     	<h2>Related Shirts (<span id="related-shirts-status">show shirts</span>)</h2>
     </a>
 
-The content target from the demo:
+The content target element from the demo:
 
     <div role="tabpanel" id="related-shirts-panel" style="display: none;"></div>
 
-The content source from the demo:
+The content source element from the demo:
 
     <script id="related-shirts-source" type="text/html">
     	<ul>
