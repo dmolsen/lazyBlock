@@ -2,6 +2,15 @@
 
 lazyBlock is a proof-of-concept to show how content can be conditionally loaded in responsive designs without relying on AJAX to fetch that content. Content is included in the original mark-up but is placed within `<script>` tags with the type `text/html`. Based on user action or screen width, the content can then be moved from the `<script>` tag and then injected into the DOM by lazyBlock.
 
+## v2 Changes
+
+Only a few changes for v2:
+
+* now uses `<script>` tag rather than comments to "hide" content. it provides for a [hair better performance](http://jsperf.com/lazy-loading-content/3).
+* better support for older versions of IE
+* slightly different syntax as I get better with JS
+* can toggle multiple elements from one call
+
 ## How is this Different from display: none?
 
 Any mark-up contained within an element that has been set to `display: none` will still be parsed by the browser. For example, if your mark-up contains images the browser will download them. For performance reasons you may not want this to happen. lazyBlock helps developers avoid those extra downloads.
@@ -65,7 +74,7 @@ lazyBlock also supports its own custom events. They are: `onLBStart`, `onLBShow`
 
     // run code at certain points in the running of the toggle
     // usage: lb.bind(element ID, event name, code to run)
-    lB.getById("related-shirts-link").bind("onLBShow",function() {         document.getElementById("related-shirts-status").innerHTML = "hide shirts"; } );
+    lB.getById("related-shirts-link").bind("onLBShow",function() { document.getElementById("related-shirts-status").innerHTML = "hide shirts"; } );
     lB.getById("related-shirts-link").bind("onLBHide",function() { document.getElementById("related-shirts-status").innerHTML = "show shirts"; } );
 
 You can also have the panel open based on screen width so you can integrate this functionality with a responsive design.
